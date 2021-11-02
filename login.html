@@ -85,7 +85,25 @@
                     // User successfully signed in.
                     // Return type determines whether we continue the redirect automatically
                     // or whether we leave that to developer to handle.
-                    return true;
+                    var user = authResult.user;
+
+                    // determine wherther the use is a new user or not
+                    if (authResult.additionalUserInfo.isNewUser){
+                        db.collection("users").doc(user.uid).set({
+                                name: user.displayName,
+                                email: user.email
+                        }).then(function(){
+                            window.location.assign("main.html");
+                        })
+                        .catch(function(error){
+                            console.log("erros is"+ error);
+                        })
+
+                    }else {
+                        return true;
+
+                    }
+                    return false;
                 },
                 uiShown: function () {
                     // The widget is rendered.
